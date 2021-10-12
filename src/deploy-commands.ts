@@ -14,7 +14,10 @@ const token = process.env.TOKEN;
 const commands = [];
 const commandFiles = fs
   .readdirSync(path.join(__dirname, "commands"))
-  .filter((file) => file.endsWith(".ts"));
+  .filter(
+    (file) =>
+      (file.endsWith(".ts") || file.endsWith(".js")) && !file.endsWith(".d.ts")
+  );
 
 for (const file of commandFiles) {
   const command = require(path.join(__dirname, "commands", file.slice(0, -3)));

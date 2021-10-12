@@ -82,7 +82,8 @@ export class Client extends DiscordClient {
         files.push(...this.readFiles(join(path, dirOrFile)));
       } else if (
         statSync(join(path, dirOrFile)).isFile() &&
-        (dirOrFile.endsWith(".js") || dirOrFile.endsWith(".ts"))
+        (dirOrFile.endsWith(".ts") || dirOrFile.endsWith(".js")) &&
+        !dirOrFile.endsWith(".d.ts")
       ) {
         const file: DirFile = {dir: path, file: dirOrFile};
         files.push(file);
