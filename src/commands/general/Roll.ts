@@ -20,7 +20,7 @@ export default class Roll extends Command {
   cooldown = "0";
   category = "general";
   guildOnly = false;
-  testing = true;
+  testing = false;
 
   diceLibrary = rpgDiceRoller;
 
