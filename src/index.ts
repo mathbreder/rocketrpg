@@ -2,14 +2,13 @@
 require("dotenv").config();
 
 // Require the necessary discord.js classes
-import {CommandInteraction, Intents, Interaction} from "discord.js";
+import {Intents} from "discord.js";
 
 import {join} from "path";
-import {Command} from "./types/Command";
 import {Client} from "./types/Client";
-import * as express from "express";
 
-const app = express();
+var express = require("express");
+var app = express();
 
 app.get("/", (request, response) => {
   const ping = new Date();
