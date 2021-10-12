@@ -53,9 +53,7 @@ export class Client extends DiscordClient {
     this.testGuildId = testGuildId;
 
     this.loadCommands(commandsPath).then((comms) => {
-      const testCommands: Collection<string, Command> = comms.filter(
-        (comm: Command) => comm.testing
-      );
+      const testCommands: Collection<string, Command> = comms;
       const globalCommands: Collection<string, Command> = comms.filter(
         (comm: Command) => !comm.testing
       );
