@@ -11,7 +11,6 @@
   "private": false,
   "scripts": {
     "start": "node --experimental-modules dist/index.js",
-    "build": "tsc -p tsconfig.json",
     "register": "nodemon src/deploy-commands.ts",
     "dev": "nodemon src/index.ts"
   },
