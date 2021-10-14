@@ -135,11 +135,11 @@ export class Client extends DiscordClient {
         .then(({default: FoundEvent}) => {
           const event: Event = new FoundEvent(this);
 
-          console.log(`Loaded event ${join(dir, file)}`);
+          console.log(`Loading event ${join(dir, file)}`);
 
           const eventFileName = file.split(".")[0];
-          const eventName =
-            eventFileName.charAt(0).toLowerCase() + eventFileName.slice(1);
+          const eventName = event.name;
+          console.log(`Loaded event ${eventName}`);
 
           if (event.once) {
             this.once(eventName, (...args: unknown[]) => {

@@ -9,14 +9,14 @@ import {Command} from "../../types/Command";
 import {Client} from "../../types/Client";
 
 export default class Roll extends Command {
-  name = "roll";
+  name = "r";
   visible = false;
   description = "Rolls a dice";
   information = "";
-  aliases: string[] = ["r"];
+  aliases: string[] = ["roll"];
   args = false;
-  usage = "/roll [n of dices]d[n of faces]";
-  example = "/roll 1d6";
+  usage = "/r [n of dices]d[n of faces]";
+  example = "/r 1d6";
   cooldown = "0";
   category = "general";
   guildOnly = false;
@@ -28,17 +28,11 @@ export default class Roll extends Command {
     .setName(this.name)
     .setDescription(this.description);
 
-  embed = (
-    username: string,
-    rolagem: string | number | boolean,
-    resultado: string
-  ) =>
+  embed = (titulo: string, descricao: string) =>
     new MessageEmbed()
       .setColor("#b20c6e")
-      .setTitle(`${username} rolou ${rolagem}`)
-      .setDescription(
-        `O resultado foi **${resultado}** ${this.getFace(resultado)}`
-      );
+      .setTitle(titulo)
+      .setDescription(descricao);
 
   constructor(client: Client) {
     super(client);
@@ -47,26 +41,31 @@ export default class Roll extends Command {
   }
 
   execute = (message: Message): Promise<Message> => {
-    return message.channel.send("Please use the slash command.");
+    try {
+      const username = message.author.username;
+      const dice = message.content.match(/\/[a-z]+\s(.*)/)?.[1];
+      const reply = this.rollDice(username, dice);
+      return message.reply({embeds: [reply]});
+    } catch (error) {
+      const reply = this.errorHandling(error);
+      return message.reply({embeds: [reply]});
+    }
   };
   executeSlash = (interaction: CommandInteraction): Promise<void> => {
     try {
-      const reply = this.rollDice(interaction);
+      const username = interaction?.user?.username;
+      const dice = interaction.options.getString("dice");
+      const reply = this.rollDice(username, <string>dice);
       return interaction.reply({embeds: [reply]});
     } catch (error) {
-      const reply = this.errorHandling(interaction, error);
+      const reply = this.errorHandling(error);
       return interaction.reply({embeds: [reply]});
     }
   };
 
-  private errorHandling(
-    interaction: CommandInteraction,
-    error: any
-  ): MessageEmbed {
-    const username = interaction?.user?.username;
+  private errorHandling(error: any): MessageEmbed {
     logger.error(error);
     return this.embed(
-      username,
       `Rolagem inválida :(`,
       `Tente colocar as informações do dado sem espaço. ` +
         `Ex: \`1d6\` ao invés de \`1 d6\` ou \`1d 6\`.\n` +
@@ -108,10 +107,13 @@ export default class Roll extends Command {
     else return ":)";
   }
 
-  private rollDice(interaction: CommandInteraction): MessageEmbed {
-    const username = interaction?.user?.username;
-    const dice = interaction.options.get("dice")?.value;
+  private rollDice(username: string, dice: string): MessageEmbed {
+    if (!isAllNotNull(dice) || dice.length === 0)
+      throw new Error("Sem argumento de dado para rolagem");
     const diceRoll = this.diceLibrary.rollDice(dice);
-    return this.embed(username, dice, diceRoll);
+    return this.embed(
+      `${username} rolou ${dice}`,
+      `O resultado foi **${diceRoll}** ${this.getFace(diceRoll)}`
+    );
   }
 }

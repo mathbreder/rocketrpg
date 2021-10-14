@@ -20,19 +20,18 @@ app.get("/", (request, response) => {
 });
 
 app.listen(process.env.PORT); // Recebe solicitações que o deixa online
+
 // Load the token from environment variable
 const token = process.env.TOKEN;
 const clientId = process.env.CLIENT_ID;
 const testGuildId = process.env.GUILD_ID;
 
 // Create a new client instance
-const client = new Client(
-  {intents: [Intents.FLAGS.GUILDS]},
+new Client(
+  {intents: ["GUILDS", "GUILD_MESSAGES", "DIRECT_MESSAGES"]},
   join(__dirname, "commands"),
   join(__dirname, "events"),
   token,
   clientId,
   testGuildId
 );
-
-express;
